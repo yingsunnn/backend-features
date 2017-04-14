@@ -48,8 +48,33 @@
 ```
 
 ## Secure password
+[Password utils](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/utils/AuthenticationUtils.java)
+```java
+    public static String getSecurePassword(String password, byte[] salt) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+
+        MessageDigest messageDigest = getInstance("SHA-512");
+        messageDigest.update(salt);
+        byte[] bytes = messageDigest.digest(password.getBytes("UTF-8"));
+        StringBuilder generatedPassword = new StringBuilder();
+        for (int i = 0; i < bytes.length; i++) {
+            generatedPassword.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+
+        return generatedPassword.toString();
+    }
+```
+
+```java
+    public static byte[] getSalt(int saltLen) throws NoSuchAlgorithmException {
+        byte[] salt = new byte[saltLen];
+        new SecureRandom().nextBytes(salt);
+        return salt;
+    }
+```
 
 ## Parameter unit test
+[Test class](https://github.com/yingsunnn/backend-features/blob/master/src/test/java/ying/backend_features/utils/AuthenticationUtilsTest.java)
+
 ```java
     @RunWith(JUnitParamsRunner.class)
 ```
