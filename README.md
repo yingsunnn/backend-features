@@ -118,6 +118,8 @@
 ## JWT
 **Sign**
 
+[Password utils](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/utils/AuthenticationUtils.java)
+
 ```java
     public String jwtSign(String secretKey) throws UnsupportedEncodingException {
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
