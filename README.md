@@ -119,7 +119,7 @@
 **Sign**
 
 ```java
-     public String jwtSign(String secretKey) throws UnsupportedEncodingException {
+    public String jwtSign(String secretKey) throws UnsupportedEncodingException {
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
         String token = JWT.create()
                 .withExpiresAt(Date.from(LocalDateTime.now().plus(1, ChronoUnit.WEEKS).atZone(ZoneId.systemDefault()).toInstant()))
@@ -141,6 +141,7 @@
         DecodedJWT jwt = verifier.verify(token);
 
         System.out.println(jwt.getClaim("role").asString());
+    }
 
 ```
 
