@@ -115,3 +115,32 @@
     }
 ```
 
+## JWT
+**Sign**
+
+```java
+     public String jwtSign(String secretKey) throws UnsupportedEncodingException {
+        Algorithm algorithm = Algorithm.HMAC256(secretKey);
+        String token = JWT.create()
+                .withExpiresAt(Date.from(LocalDateTime.now().plus(1, ChronoUnit.WEEKS).atZone(ZoneId.systemDefault()).toInstant()))
+                .withNotBefore(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
+                .withIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
+                .withIssuer("Ying")
+                .withClaim("role", "admin")
+                .sign(algorithm);
+        logger.debug("secret token: " + token);
+
+        return token;
+    }
+```
+**Verify**
+```java
+    public void jwtVerify (String token, String secretKey) throws UnsupportedEncodingException {
+        Algorithm algorithm = Algorithm.HMAC256(secretKey);
+        JWTVerifier verifier = JWT.require(algorithm).build(); //Reusable verifier instance
+        DecodedJWT jwt = verifier.verify(token);
+
+        System.out.println(jwt.getClaim("role").asString());
+
+```
+
