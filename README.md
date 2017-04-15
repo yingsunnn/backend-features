@@ -199,4 +199,78 @@ public class AnnotationResolverConfig extends WebMvcConfigurerAdapter {
 }
 ```
 
+## Custom method annotation
 
+**Implement MethodInterceptor**
+
+[ServicePermissionsNeedMethodInterceptor](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/method_annotation/ServicePermissionsNeedMethodInterceptor.java)
+
+```java
+public class ServicePermissionsNeedMethodInterceptor implements MethodInterceptor {
+    .
+    .
+    .
+}
+```
+
+**Implement AbstractPointcutAdvisor**
+
+[ServicePermissionsNeedAdvisor](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/method_annotation/ServicePermissionsNeedAdvisor.java)
+
+```java
+@Component
+public class ServicePermissionsNeedAdvisor extends AbstractPointcutAdvisor {
+    private final StaticMethodMatcherPointcut pointcut = new
+            StaticMethodMatcherPointcut() {
+                @Override
+                public boolean matches(Method method, Class<?> targetClass) {
+                    return method.isAnnotationPresent(ServicePermissionsNeed.class);
+                }
+            };
+
+    @Autowired
+    private ServicePermissionsNeedMethodInterceptor interceptor;
+
+
+    @Override
+    public Pointcut getPointcut() {
+        return pointcut;
+    }
+
+    @Override
+    public Advice getAdvice() {
+        return interceptor;
+    }
+}
+```
+
+**Costom annotation**
+
+[ServicePermissionsNeed](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/method_annotation/ServicePermissionsNeed.java)
+
+```java
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ServicePermissionsNeed {
+    public String[] value() default {"read_post", "read_reply"};
+}
+```
+
+**Configuration**
+
+[SpringConfiguration](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/SpringConfiguration.java)
+
+```java
+    @Bean
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+        DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+        defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
+
+        return defaultAdvisorAutoProxyCreator;
+    }
+
+    @Bean
+    public ServicePermissionsNeedMethodInterceptor getPermissionMethodInterceptor() {
+        return new ServicePermissionsNeedMethodInterceptor();
+    }
+```
