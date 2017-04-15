@@ -144,4 +144,51 @@
     }
 
 ```
+## Custom parameter annotation
+
+**Custom annotation**
+
+```java
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface UserAuthentication {
+
+    public static final String MANDATORY = "MANDATORY";
+    public static final String OPTIONAL = "OPTIONAL";
+
+    public String value() default MANDATORY;
+}
+```
+
+**HandlerMethodArgumentResolver**
+
+```java
+
+@Component
+public class UserAuthenticationResolver implements HandlerMethodArgumentResolver {
+    .
+    .
+    .
+}
+```
+
+**Configuration**
+
+```java
+@Configuration
+public class AnnotationResolverConfig extends WebMvcConfigurerAdapter {
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        argumentResolvers.add(userAuthenticationResolver());
+        super.addArgumentResolvers(argumentResolvers);
+    }
+
+    @Bean
+    public UserAuthenticationResolver userAuthenticationResolver() {
+        return new UserAuthenticationResolver();
+    }
+}
+```
+
 
