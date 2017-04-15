@@ -200,6 +200,7 @@ public class AnnotationResolverConfig extends WebMvcConfigurerAdapter {
 ```
 
 ## Custom method annotation
+[Tutorial](http://blog.javaforge.net/post/76125490725/spring-aop-method-interceptor-annotation)
 
 **Implement MethodInterceptor**
 
