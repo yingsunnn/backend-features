@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+    <script src="https://d1fxtkz8shb9d2.cloudfront.net/sockjs-0.3.4.min.js"></script>
+    <script>
+        var uid = 0;
+        var websocket;
+//        if ('WebSocket' in window) {
+//            console.log("initial ws: 1 WebSocket");
+//            websocket = new WebSocket("ws://127.0.0.1:8080/ws/test");
+//        } else if ('MozWebSocket' in window) {
+//            console.log("initial ws: 2 MozWebSocket");
+//            websocket = new MozWebSocket("ws://127.0.0.1:8080/ws/test");
+//        } else {
+            console.log("initial ws: 3 else");
+            websocket = new SockJS("https://127.0.0.1:8443/ws/test/sockjs");
+//        }
+        websocket.onopen = function (event) {
+            console.log(":) WebSocket:已连接");
+            console.log(event);
+        };
+        websocket.onmessage = function (event) {
+            var data = JSON.parse(event.data);
+            console.log(":) WebSocket:收到一条消息", data);
+        };
+        websocket.onerror = function (event) {
+            console.log(":) WebSocket:发生错误 ");
+            console.log(event);
+        };
+        websocket.onclose = function (event) {
+            console.log(":) WebSocket:已关闭");
+            console.log(event);
+        }
+
+        function send(event) {
+            var code;
+            if (window.event) {
+                code = window.event.keyCode; // IE
+            } else {
+                code = e.which; // Firefox
+            }
+            if (code == 13) {
+                sendMsg();
+            }
+        }
+
+        function sendMsg() {
+            var v = $("#msg").val();
+            if (v == "") {
+                return;
+            } else {
+                var data = {};
+                data["from"] = "1";
+                data["fromName"] = "ying";
+                data["to"] = "2";
+                data["text"] = v;
+                websocket.send(JSON.stringify(data));
+            }
+        }
+
+    </script>
+</head>
+<body>
+<div id="content"></div>
+<input type="text" placeholder="message" id="msg" onkeydown="send(event)">
+<input type="button" value="Send" onclick="sendMsg()">
+</body>
+</html>

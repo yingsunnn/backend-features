@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello WebSocket</title>
+    <script src="https://d1fxtkz8shb9d2.cloudfront.net/sockjs-0.3.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script type="text/javascript">
+        var stompClient = null;
+        function connect() {
+
+            var roomId = document.getElementById('room_id').value;
+            // Controller 中的 @MessageMapping("/ws1/chat/{room_id}")
+            var socket = new SockJS('/ws1/chat/' + roomId);
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function(frame) {
+                // 订阅 @SendTo 路径
+                // path 的开头 在配置文件中 messageBrokerRegistry.enableSimpleBroker("/ws_send_to");
+                stompClient.subscribe('/ws_send_to/chat/' + roomId , function(message) {
+                    var response = document.getElementById('response');
+                    var p = document.createElement('p');
+                    p.style.wordWrap = 'break-word';
+                    p.appendChild(document.createTextNode(JSON.parse(message.body).message));
+                    response.appendChild(p);
+                });
+            });
+        }
+        function disconnect() {
+            if (stompClient != null) {
+                stompClient.disconnect();
+            }
+            console.log("Disconnected");
+        }
+        function sendReply() {
+            var message = document.getElementById('message').value;
+            var roomId = document.getElementById('room_id').value;
+            // Controller 中的 @MessageMapping("/ws1/chat/{room_id}")
+            stompClient.send('/ws1/chat/' + roomId, {}, JSON.stringify({
+                'message' : message
+            }));
+        }
+    </script>
+</head>
+<body onload="disconnect()">
+<noscript>
+    <h2 style="color: #ff0000">
+        Seems your browser doesn't support Javascript! Websocket relies on Javascript being enabled. Please enable Javascript and reload this page!
+    </h2>
+</noscript>
+<div>
+    <div>
+        <input type="text" id="room_id" value="1001"/>
+        <button id="connect" onclick="connect();">Connect</button>
+        <button id="disconnect" onclick="disconnect();">Disconnect</button>
+    </div>
+    <div>
+        <input type="text" id="message" />
+        <button onclick="sendReply();">Reply</button>
+        <p id="response"></p>
+    </div>
+</div>
+</body>
+</html>
