@@ -93,6 +93,9 @@ public class RedisOptionsController {
         return "{\"value\":\"" + value + "\"}";
     }
 
+    /**
+     * list set
+     */
     @RequestMapping(value = "list_set", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public String setRedisList() {
         List<String> list = new ArrayList<String>();
@@ -106,11 +109,25 @@ public class RedisOptionsController {
         return "{\"message\":\"success\"}";
     }
 
+    /**
+     * list get
+     */
     @RequestMapping(value = "list_get", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public String getRedisList() {
         BoundListOperations boundListOperations = redisTemplate.boundListOps("redis_list");
         List<String> list = boundListOperations.range(0, -1);
 
         return "{\"value\":\"" + list + "\"}";
+    }
+
+    /**
+     * has key
+     */
+    @RequestMapping(value = "has_key/{key}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    public String hasKey(@PathVariable String key) {
+
+        boolean flag = redisTemplate.hasKey(key);
+
+        return "{\"value\":\"" + flag + "\"}";
     }
 }
