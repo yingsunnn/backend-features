@@ -317,7 +317,7 @@ public @interface ServicePermissionsNeed {
 
 [RedisOptionsController](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/redis_options/RedisOptionsController.java)
 
-## Websocket
+## Websocket 1
 
 **Config**
 
