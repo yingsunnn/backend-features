@@ -320,6 +320,7 @@ public @interface ServicePermissionsNeed {
 ## Websocket
 
 **Config**
+
 ```java
 @Configuration
 @EnableWebSocketMessageBroker
@@ -340,6 +341,8 @@ public class WebSocketConfig1 extends AbstractWebSocketMessageBrokerConfigurer {
 }
 ```
 
+**Controller**
+
 ```java
     /**
      * Websocket example
@@ -351,6 +354,8 @@ public class WebSocketConfig1 extends AbstractWebSocketMessageBrokerConfigurer {
         return directMessage;
     }
 ```
+
+**Page**
 
 ```javascript
     var socket = new SockJS('/ws1/chat/' + roomId);
