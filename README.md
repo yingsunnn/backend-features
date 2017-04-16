@@ -321,6 +321,8 @@ public @interface ServicePermissionsNeed {
 
 **Config**
 
+[WebSocketConfig1](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/websocket_1/WebSocketConfig1.java)
+
 ```java
 @Configuration
 @EnableWebSocketMessageBroker
@@ -343,6 +345,8 @@ public class WebSocketConfig1 extends AbstractWebSocketMessageBrokerConfigurer {
 
 **Controller**
 
+[WebSocketController1](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/websocket_1/WebSocketController1.java)
+
 ```java
     /**
      * Websocket example
@@ -356,6 +360,8 @@ public class WebSocketConfig1 extends AbstractWebSocketMessageBrokerConfigurer {
 ```
 
 **Page**
+
+[websocket1.html](https://github.com/yingsunnn/backend-features/blob/master/src/main/resources/static/websocket1.html)
 
 ```javascript
     var socket = new SockJS('/ws1/chat/' + roomId);
