@@ -275,3 +275,45 @@ public @interface ServicePermissionsNeed {
         return new ServicePermissionsNeedMethodInterceptor();
     }
 ```
+## Redis options
+
+**Redis pool config**
+
+[RedisPoolConfig](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/redis_options/RedisPoolConfig.java)
+
+```java
+    @Bean
+    public JedisConnectionFactory jedisConnectionFactory() {
+        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+        jedisPoolConfig.setMaxIdle(maxIdle);
+        jedisPoolConfig.setMinIdle(minIdle);
+        jedisPoolConfig.setJmxEnabled(true);
+        jedisPoolConfig.setMaxTotal(maxTotal);
+        jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
+
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(jedisPoolConfig);
+        jedisConnectionFactory.setHostName(redisHostName);
+        jedisConnectionFactory.setPassword(redisPassword);
+        jedisConnectionFactory.setPort(redisPort);
+        return jedisConnectionFactory;
+    }
+
+    @Bean
+    @Autowired
+    public RedisTemplate<String, String> redisTemplate(JedisConnectionFactory jedisConnectionFactory) {
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<String, String>();
+        redisTemplate.setConnectionFactory(jedisConnectionFactory);
+
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+
+        return redisTemplate;
+    }
+```
+
+**Options**
+
+[RedisOptionsController](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/redis_options/RedisOptionsController.java)
+
