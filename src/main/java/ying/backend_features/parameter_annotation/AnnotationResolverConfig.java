@@ -1,4 +1,4 @@
-package ying.backend_features;
+package ying.backend_features.parameter_annotation;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

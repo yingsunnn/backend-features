@@ -60,16 +60,4 @@ public class SpringConfiguration {
         return connector;
     }
 
-    @Bean
-    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
-        DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
-        defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
-
-        return defaultAdvisorAutoProxyCreator;
-    }
-
-    @Bean
-    public ServicePermissionsNeedMethodInterceptor getPermissionMethodInterceptor() {
-        return new ServicePermissionsNeedMethodInterceptor();
-    }
 }
