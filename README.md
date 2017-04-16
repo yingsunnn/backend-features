@@ -180,7 +180,7 @@ public class UserAuthenticationResolver implements HandlerMethodArgumentResolver
 
 **Configuration**
 
-[AnnotationResolverConfig](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/AnnotationResolverConfig.java)
+[AnnotationResolverConfig](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/parameter_annotation/AnnotationResolverConfig.java)
 
 ```java
 @Configuration
@@ -259,7 +259,7 @@ public @interface ServicePermissionsNeed {
 
 **Configuration**
 
-[SpringConfiguration](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/SpringConfiguration.java)
+[MethodInterceptorConfig](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/method_annotation/MethodInterceptorConfig.java)
 
 ```java
     @Bean
