@@ -317,3 +317,57 @@ public @interface ServicePermissionsNeed {
 
 [RedisOptionsController](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/redis_options/RedisOptionsController.java)
 
+## Websocket
+
+**Config**
+```java
+@Configuration
+@EnableWebSocketMessageBroker
+public class WebSocketConfig1 extends AbstractWebSocketMessageBrokerConfigurer {
+
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry messageBrokerRegistry) {
+        messageBrokerRegistry.enableSimpleBroker("/ws_send_to");
+//        messageBrokerRegistry.setApplicationDestinationPrefixes("/wschat");
+//        messageBrokerRegistry.setUserDestinationPrefix("/userTest");
+    }
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry stompEndpointRegistry) {
+        stompEndpointRegistry.addEndpoint("/ws1/chat/{room_id}").setAllowedOrigins("*").withSockJS();
+
+    }
+}
+```
+
+```java
+    /**
+     * Websocket example
+     */
+    @MessageMapping("/ws1/chat/{room_id}")
+    @SendTo("/ws_send_to/chat/{room_id}") 
+    public DirectMessage reply(DirectMessage directMessage, @PathVariable("room_id") String roomId) throws Exception {
+        logger.debug("room id: " + roomId + " directMessage: " + directMessage);
+        return directMessage;
+    }
+```
+
+```javascript
+    var socket = new SockJS('/ws1/chat/' + roomId);
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function(frame) {
+        stompClient.subscribe('/ws_send_to/chat/' + roomId , function(message) {
+            .
+            .
+            .
+        });
+    });
+
+    function sendReply() {
+        var message = document.getElementById('message').value;
+        var roomId = document.getElementById('room_id').value;
+        stompClient.send('/ws1/chat/' + roomId, {}, JSON.stringify({
+            'message' : message
+        }));
+    }
+```
