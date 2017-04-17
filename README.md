@@ -382,3 +382,103 @@ public class WebSocketConfig1 extends AbstractWebSocketMessageBrokerConfigurer {
         }));
     }
 ```
+
+## Websocket 2
+
+**Implement HandshakeInterceptor**
+
+[HandShake](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/websocket_2/HandShake.java)
+
+```java
+public class HandShake implements HandshakeInterceptor {
+    .
+    .
+    .
+}
+```
+
+**Implement WebSocketHandler**
+
+[MyWebSocketHandler](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/websocket_2/MyWebSocketHandler.java)
+
+```java
+
+@Component
+public class MyWebSocketHandler implements WebSocketHandler {
+    .
+    .
+    .
+}
+```
+
+**Configuration**
+
+[WebSocketHandlerConfigurer](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/websocket_2/WebSocketHandlerConfigurer.java)
+
+```java
+@Component
+@EnableWebSocket
+public class WebSocketHandlerConfigurer implements WebSocketConfigurer {
+
+    @Autowired
+    MyWebSocketHandler handler;
+
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
+//        webSocketHandlerRegistry.addHandler(handler, "/ws2/test").addInterceptors(new HandShake()).setAllowedOrigins("*").withSockJS();
+        webSocketHandlerRegistry.addHandler(handler, "/ws2/post/{board_id}/sockjs").addInterceptors(new HandShake()).setAllowedOrigins("*").withSockJS();
+    }
+}
+
+```
+
+**Boardcast controller**
+
+[WebSocketController2](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/websocket_2/WebSocketController2.java)
+
+```java
+    @RequestMapping(value = "ws2/boardcast/{title}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    public String websocketBoardcast (@PathVariable String title) throws IOException {
+        MyWebSocketHandler.boardcast(title);
+
+        return "{\"message\":\"success\"}";
+    }
+```
+
+**Page**
+
+[websocket2](https://github.com/yingsunnn/backend-features/blob/master/src/main/resources/static/websocket2.html)
+
+```javascript
+websocket = new SockJS("https://127.0.0.1:8443/ws2/post/10000/sockjs");
+
+websocket.onopen = function (event) {
+    console.log(":) WebSocket:已连接");
+    console.log(event);
+};
+websocket.onmessage = function (event) {
+    var data = JSON.parse(event.data);
+    console.log(":) WebSocket:收到一条消息", data);
+};
+websocket.onerror = function (event) {
+    console.log(":) WebSocket:发生错误 ");
+    console.log(event);
+};
+websocket.onclose = function (event) {
+    console.log(":) WebSocket:已关闭");
+    console.log(event);
+}
+        
+function sendPost() {
+    var v = $("#post").val();
+    if (v == "") {
+        return;
+    } else {
+        var data = {};
+        data["userId"] = "1";
+        data["title"] = v;
+        data["summary"] = "This is a summary.";
+        websocket.send(JSON.stringify(data));
+    }
+}        
+```
