@@ -7,8 +7,6 @@
     <script type="text/javascript">
         var stompClient = null;
         function connect() {
-
-            var roomId = document.getElementById('room_id').value;
             // Controller 中的 @MessageMapping("/ws1/chat/{room_id}")
             var socket = new SockJS('/ws1/chat/' + roomId);
             stompClient = Stomp.over(socket);

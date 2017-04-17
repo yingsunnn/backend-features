@@ -16,7 +16,7 @@
 //            websocket = new MozWebSocket("ws://127.0.0.1:8080/ws/test");
 //        } else {
             console.log("initial ws: 3 else");
-            websocket = new SockJS("https://127.0.0.1:8443/ws/test/sockjs");
+            websocket = new SockJS("https://127.0.0.1:8443/ws2/post/10000/sockjs");
 //        }
         websocket.onopen = function (event) {
             console.log(":) WebSocket:已连接");
@@ -43,20 +43,19 @@
                 code = e.which; // Firefox
             }
             if (code == 13) {
-                sendMsg();
+                sendPost();
             }
         }
 
-        function sendMsg() {
-            var v = $("#msg").val();
+        function sendPost() {
+            var v = $("#post").val();
             if (v == "") {
                 return;
             } else {
                 var data = {};
-                data["from"] = "1";
-                data["fromName"] = "ying";
-                data["to"] = "2";
-                data["text"] = v;
+                data["userId"] = "1";
+                data["title"] = v;
+                data["summary"] = "This is a summary.";
                 websocket.send(JSON.stringify(data));
             }
         }
@@ -65,7 +64,7 @@
 </head>
 <body>
 <div id="content"></div>
-<input type="text" placeholder="message" id="msg" onkeydown="send(event)">
-<input type="button" value="Send" onclick="sendMsg()">
+<input type="text" id="post" onkeydown="send(event)">
+<input type="button" value="Send" onclick="sendPost()">
 </body>
 </html>
