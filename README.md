@@ -482,3 +482,73 @@ function sendPost() {
     }
 }        
 ```
+
+## Cors filter
+
+[CorsFilter](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/filter/CorsFilter.java)
+
+```java
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        httpResponse.addHeader("Access-Control-Allow-Origin", "*");
+        httpResponse.addHeader("Access-Control-Allow-Credentials", "true");
+
+        if (isPreFlightRequest(httpRequest)) {
+            // CORS "pre-flight" request
+            httpResponse.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+            httpResponse.addHeader("Access-Control-Allow-Headers", "X-Requested-With,Origin,Content-Type,Accept,access_token,user_id");
+            return;
+        }
+
+        chain.doFilter(request, response);
+    }
+    
+    private boolean isCorsRequest(HttpServletRequest request) {
+        return (request.getHeader(HttpHeaders.ORIGIN) != null);
+    }
+
+    private boolean isPreFlightRequest(HttpServletRequest request) {
+        return (isCorsRequest(request) && HttpMethod.OPTIONS.matches(request.getMethod()) &&
+                request.getHeader(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD) != null);
+    }
+
+```
+
+## Exception handler
+
+[ExceptionsHandler](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/Exceptions/ExceptionsHandler.java)
+
+```java
+@ControllerAdvice
+@ResponseBody
+public class ExceptionsHandler {
+    @ExceptionHandler(Exception.class)
+    public String handleException(HttpServletRequest request, HttpServletResponse response, Exception e) {
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        e.printStackTrace();
+        return CommonJSONUtils.getErrorJson("0", "Internal exception. " + getMessage(e));
+    }
+}
+```
+
+## Get IP address
+
+[IPAddressUtils](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/utils/IPAddressUtils.java)
+
+```java
+    public static String getIpAddress(HttpServletRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
+    }
+```
