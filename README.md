@@ -552,3 +552,95 @@ public class ExceptionsHandler {
         return ip;
     }
 ```
+## MySQL 
+
+**Configuration**
+
+[MySQLDatasourceConfig](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/mysql/MySQLDatasourceConfig.java)
+
+```java
+    @Bean(name = "dataSource")
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(CLASS_NAME);
+        dataSource.setUsername(mySQLUsername);
+        dataSource.setPassword(mySQLPassword);
+        dataSource.setUrl(mySQLURL);
+        return dataSource;
+    }
+
+    @Bean
+    @Autowired
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+        final JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        jdbcTemplate.setDataSource(dataSource);
+        jdbcTemplate.afterPropertiesSet();
+        return jdbcTemplate;
+    }
+
+    @Bean
+    @Autowired
+    public NamedParameterJdbcTemplate namedParameterJdbcTemplate(DataSource dataSource) {
+        return new NamedParameterJdbcTemplate(dataSource);
+    }
+
+    @Bean
+    @Autowired
+    public PlatformTransactionManager txManager(DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+```
+
+**Operation**
+
+[MySQLController](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/mysql/MySQLController.java)
+
+```java
+StringBuilder sql = new StringBuilder();
+MapSqlParameterSource params = new MapSqlParameterSource();
+
+sql.append("SELECT ");
+sql.append("  u.user_id, ");
+sql.append("  u.username, ");
+sql.append("  u.profile_picture, ");
+sql.append("  u.bio, ");
+sql.append("  u.gender, ");
+sql.append("  u.region, ");
+sql.append("  u.role, ");
+sql.append("  u.birthday, ");
+sql.append("  u.occupation, ");
+sql.append("  u.user_status, ");
+sql.append("  u.created_at, ");
+sql.append("  u.updated_at ");
+sql.append("FROM t_user u ");
+sql.append("Where u.user_id = :userId");
+
+params.addValue("userId", userId);
+List<User> users = namedParameterJdbcTemplate.query(sql.toString(), params, new UserMapper());
+```
+
+**Mapper**
+
+[MySQLController - UserMapper](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/mysql/MySQLController.java)
+
+```java
+    private class UserMapper implements RowMapper<User> {
+        @Override
+        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+            User user = new User();
+            user.setUserId(rs.getLong("user_id"));
+            user.setUsername(rs.getString("username"));
+            user.setProfilePictureId(rs.getLong("profile_picture"));
+            user.setBio(rs.getString("bio"));
+            user.setGender(rs.getString("gender"));
+            user.setRegionId(rs.getLong("region"));
+            user.setRoleId(rs.getLong("role"));
+            user.setBirthday(rs.getLong("birthday"));
+            user.setOccupation(rs.getString("occupation"));
+            user.setUserStatus(rs.getString("user_status"));
+            user.setCreatedAt(rs.getLong("created_at"));
+            user.setUpdatedAt(rs.getLong("updated_at"));
+            return user;
+        }
+    }
+```
