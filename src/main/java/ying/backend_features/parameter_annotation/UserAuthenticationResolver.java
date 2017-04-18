@@ -19,7 +19,8 @@ public class UserAuthenticationResolver implements HandlerMethodArgumentResolver
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        boolean userAuthenticationFlag = methodParameter.hasMethodAnnotation(RequestMapping.class);
+        boolean userAuthenticationFlag = methodParameter.hasParameterAnnotation(UserAuthentication.class);
+//        boolean UserAuthenticationonFlag = methodParameter.hasMethodAnnotation(UserAuthentication.class);
         if (userAuthenticationFlag == false)
             return false;
 
@@ -33,7 +34,9 @@ public class UserAuthenticationResolver implements HandlerMethodArgumentResolver
                                   WebDataBinderFactory webDataBinderFactory) throws Exception {
         boolean userAuthenticationCheckFlag = methodParameter.hasMethodAnnotation(PermissionsNeed.class);
         if (userAuthenticationCheckFlag == false) {
-            throw new RuntimeException("Annotation PermissionsNeed doesn't exists.");
+            String methodName = methodParameter.getMethod().getName();
+            String className = methodParameter.getClass().getName();
+            throw new RuntimeException("Class name: " + className    + " method name: " + methodName + " Annotation PermissionsNeed doesn't exists.");
         }
 
         UserAuthentication userAuthentication = methodParameter.getParameterAnnotation(UserAuthentication.class);
