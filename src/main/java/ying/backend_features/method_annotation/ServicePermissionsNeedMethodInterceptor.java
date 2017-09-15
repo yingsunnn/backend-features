@@ -14,9 +14,19 @@ public class ServicePermissionsNeedMethodInterceptor implements MethodIntercepto
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
+        Object[] arguments = invocation.getArguments();
+        for (Object argument : arguments) {
+            System.out.println(argument);
+        }
+
+        ServicePermissionsNeed servicePermissionsNeed = invocation.getMethod().getAnnotation(ServicePermissionsNeed.class);
+
+        for (String string : servicePermissionsNeed.value()){
+            System.out.println(string);
+        }
+
         final StopWatch stopWatch = new StopWatch(invocation.getMethod().toGenericString());
         stopWatch.start("invocation.proceed()");
-
         try {
             logger.debug("~~~~~~~~ START METHOD {} ~~~~~~~~", invocation.getMethod().toGenericString());
             return invocation.proceed();

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ServicePermissionsNeedService {
 
-    @ServicePermissionsNeed({"edit_all_posts", "edit_all_relies"})
+
     public String test () {
 
         return null;
