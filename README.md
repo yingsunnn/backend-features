@@ -645,5 +645,98 @@ List<User> users = namedParameterJdbcTemplate.query(sql.toString(), params, new 
     }
 ```
 
+## JPA
+
+### Dependences
+
+```
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>6.0.3</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>com.github.wenhao</groupId>
+    <artifactId>jpa-spec</artifactId>
+    <version>3.1.1</version>
+</dependency>
+```
+
+### Configuration
+
+```
+spring.datasource.url= jdbc:mysql://localhost:3306/test_db?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=123456
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+# Number of ms to wait before throwing an exception if no connection is available.
+spring.datasource.tomcat.max-wait=10000
+# Maximum number of active connections that can be allocated from this pool at the same time.
+spring.datasource.tomcat.max-active=50
+# Validate the connection before borrowing it from the pool.
+spring.datasource.tomcat.test-on-borrow=true
+```
+
+### Entity
+
+[UserProfile](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/jpa/UserProfile.java)
+
+```java
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Entity(name = "t_user_profile")
+public class UserProfile {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank
+    @Column(name = "name", length = 100)
+    private String name;
+
+    private String bio;
+}
+```
+
+### Repository
+
+[UserProfileRepository](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/jpa/UserProfileRepository.java)
+
+```java
+public interface UserProfileRepository extends JpaRepository<UserProfile, Long>, JpaSpecificationExecutor<UserProfile> {
+
+    UserProfile findById (Long Id);
+}
+```
+
+### Operations
+
+[JPAController](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/jpa/JPAController.java)
+
+```java
+userProfileRepository.save(userProfile);
+        return userProfile;
+```
+
+```java
+Specification<UserProfile> specification = Specifications.<UserProfile>and()
+                .eq(id != null, "id", id)
+                .like(StringUtils.isNotBlank(name), "name", "%" + name + "%")
+                .like(StringUtils.isNotBlank(bio), "bio", "%" + bio + "%")
+                .build();
+
+return userProfileRepository.findAll(specification, pageable);
+```
+
 ## ZonedDateTime
 [DateTimeUtils](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/utils/DateTimeUtils.java)
