@@ -37,7 +37,7 @@ public class DirectMessage {
     public String toString() {
         StringBuilder str = new StringBuilder();
         str.append("Id: ").append(getId())
-                .append(" User: ").append(getUserId())
+                .append(" UserProfile: ").append(getUserId())
                 .append(" Message: ").append(getMessage());
 
         return str.toString();

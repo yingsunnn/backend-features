@@ -42,7 +42,7 @@ public class UserAuthenticationResolver implements HandlerMethodArgumentResolver
         UserAuthentication userAuthentication = methodParameter.getParameterAnnotation(UserAuthentication.class);
         PermissionsNeed userAuthenticationCheck = methodParameter.getMethodAnnotation(PermissionsNeed.class);
 
-        logger.debug("User auth : " + userAuthentication.value());
+        logger.debug("UserProfile auth : " + userAuthentication.value());
         logger.debug("Permissions need : " + Arrays.asList(userAuthenticationCheck.value()));
 
         String auth = nativeWebRequest.getHeader("Authentication");

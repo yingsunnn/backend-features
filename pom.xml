@@ -104,6 +104,12 @@
         </dependency>
         <!-- lombok end -->
 
+        <!-- jpa -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <!-- jpa end -->
 
         <dependency>
             <groupId>org.apache.commons</groupId>

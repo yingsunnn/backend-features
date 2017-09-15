@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 /**
  * Created by ying on 2017-04-17.
  */
-@Configuration
+//@Configuration
 public class MySQLDatasourceConfig {
 
     private static final String CLASS_NAME = "com.mysql.cj.jdbc.Driver";

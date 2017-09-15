@@ -25,8 +25,8 @@ public class HandShake implements HandshakeInterceptor {
         if (serverHttpRequest instanceof ServletServerHttpRequest) {
             ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) serverHttpRequest;
 
-            // User auth verification.
-            logger.debug("HandshakeInterceptor User Authentication.");
+            // UserProfile auth verification.
+            logger.debug("HandshakeInterceptor UserProfile Authentication.");
         }
         return true;
     }
