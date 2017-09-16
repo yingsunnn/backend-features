@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface DrugRepository
         extends JpaRepository<Drug, Long>, JpaSpecificationExecutor<Drug> {
 
+    Drug findById (Long id);
+
 }

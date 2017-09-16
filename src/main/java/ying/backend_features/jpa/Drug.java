@@ -1,5 +1,6 @@
 package ying.backend_features.jpa;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +25,7 @@ public class Drug {
 
     private String description;
 
-    @ManyToMany(mappedBy = "drugs")
+    @ManyToMany(mappedBy = "drugs", fetch = FetchType.LAZY)
     private List<Prescription> prescriptions;
 
 }

@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "jpa", produces = "application/json;charset=UTF-8")
@@ -62,15 +64,76 @@ public class JPAController {
         return userProfileRepository.findAll(specification, pageable);
     }
 
+    /**
+     * {
+         "title":"p 1",
+         "description": "ssdfsfs s fsdf sdf",
+         "drugs": [
+             {
+                "id":1
+             },
+             {
+                "id":2
+             }
+         ]
+       }
+     * @param prescription
+     * @return
+     */
     @PostMapping("prescriptions")
     @Transactional(propagation = Propagation.REQUIRED)
-    public Prescription addNewPrescription(@Valid @RequestBody Prescription prescription) {
+    public void addNewPrescription(@Valid @RequestBody Prescription prescription) {
         Prescription result = prescriptionRepository.save(prescription);
 
         if (CollectionUtils.isNotEmpty(prescription.getDrugs())) {
-            drugRepository.save(prescription.getDrugs());
-        }
 
-        return result;
+            List<Drug> drugs = new ArrayList();
+            for (Drug drug : prescription.getDrugs()) {
+                if (drug.getId() != null){
+                    Drug existDrug = drugRepository.findById(drug.getId());
+                    drugs.add(existDrug);
+                }
+
+            }
+            result.setDrugs(drugs);
+            drugRepository.save(drugs);
+        }
+    }
+
+    /**
+     *{
+         "name": "drug 000",
+         "description": "sf sdf sd asf 23 2"
+      }
+     * @param drug
+     * @return
+     */
+    @PostMapping("drugs")
+    public void addNewDrug (@Valid @RequestBody Drug drug) {
+        drugRepository.save(drug);
+    }
+
+    @GetMapping("prescriptions/drugs")
+    public List<Prescription> getPrescriptionByDrug (@RequestParam(value = "drug_id", required = false) Long drugId) {
+        List<Prescription> prescriptions = prescriptionRepository.findByDrugs_Id(drugId);
+
+        for (Prescription prescription : prescriptions) {
+            for (Drug drug : prescription.getDrugs()){
+                drug.setPrescriptions(null);
+            }
+        }
+        return prescriptions;
+    }
+
+    @GetMapping("prescriptions/{prescription_id}")
+    public List<Prescription> getPresciption (@PathVariable("prescription_id") Long id) {
+        List<Prescription> prescriptions = prescriptionRepository.findById(id);
+
+        for (Prescription prescription : prescriptions) {
+            for (Drug drug : prescription.getDrugs()){
+                drug.setPrescriptions(null);
+            }
+        }
+        return prescriptions;
     }
 }

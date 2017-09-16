@@ -26,7 +26,7 @@ public class Prescription {
 
     private String description;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "t_prescription_drug",
             joinColumns = {@JoinColumn(name = "prescription_id")},
             inverseJoinColumns = {@JoinColumn(name = "drug_id")})
