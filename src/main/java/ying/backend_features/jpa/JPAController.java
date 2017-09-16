@@ -114,6 +114,7 @@ public class JPAController {
     }
 
     @GetMapping("prescriptions/drugs")
+    @Transactional(readOnly = true)
     public List<Prescription> getPrescriptionByDrug (@RequestParam(value = "drug_id", required = false) Long drugId) {
         List<Prescription> prescriptions = prescriptionRepository.findByDrugs_Id(drugId);
 
@@ -126,6 +127,7 @@ public class JPAController {
     }
 
     @GetMapping("prescriptions/{prescription_id}")
+    @Transactional(readOnly = true)
     public List<Prescription> getPresciption (@PathVariable("prescription_id") Long id) {
         List<Prescription> prescriptions = prescriptionRepository.findById(id);
 
