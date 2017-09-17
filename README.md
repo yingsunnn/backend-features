@@ -738,5 +738,58 @@ Specification<UserProfile> specification = Specifications.<UserProfile>and()
 return userProfileRepository.findAll(specification, pageable);
 ```
 
+### Many to Many
+**Entities**
+
+```java
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Entity(name = "t_drug")
+public class Drug {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    private String description;
+
+    @ManyToMany(mappedBy = "drugs", fetch = FetchType.LAZY)
+    private List<Prescription> prescriptions;
+
+}
+```
+
+```java
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Entity(name = "t_prescription")
+public class Prescription {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String title;
+
+    private String description;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "t_prescription_drug",
+            joinColumns = {@JoinColumn(name = "prescription_id")},
+            inverseJoinColumns = {@JoinColumn(name = "drug_id")})
+    private List<Drug> drugs;
+
+    @Column(name = "create_time")
+    private ZonedDateTime createTime;
+}
+```
+
 ## ZonedDateTime
 [DateTimeUtils](https://github.com/yingsunnn/backend-features/blob/master/src/main/java/ying/backend_features/utils/DateTimeUtils.java)
