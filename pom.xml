@@ -11,6 +11,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <org.mapstruct.version>1.2.0.CR1</org.mapstruct.version>
+        <org.projectlombok.version>1.16.14</org.projectlombok.version>
     </properties>
 
     <parent>
@@ -95,15 +97,6 @@
         </dependency>
         <!-- aliyun end -->
 
-        <!-- lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.16.18</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- lombok end -->
-
         <!-- jpa -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -116,6 +109,29 @@
             <version>3.1.1</version>
         </dependency>
         <!-- jpa end -->
+
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${org.projectlombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- lombok end -->
+
+        <!-- map struct -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${org.mapstruct.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- map struct end-->
 
         <dependency>
             <groupId>org.apache.commons</groupId>
